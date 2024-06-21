@@ -16,14 +16,22 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configure the PostgreSQL client using environment variables
-const db = new pg.Client({
-    connectionString: process.env.POSTGRES_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
+let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
 
-db.connect();
+// Ensure PGPASSWORD is decoded if it was URL-encoded in .env
+PGPASSWORD = decodeURIComponent(PGPASSWORD);
+
+const pool = new pg.Pool({
+  user: PGUSER,
+  host: PGHOST,
+  database: PGDATABASE,
+  password: PGPASSWORD,
+  port: 5432,
+  ssl: {
+    rejectUnauthorized: false, // Set to true if your Aiven instance requires it
+  },
+  connectionTimeoutMillis: 3000, // Adjust as needed
+});
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,30 +52,37 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get("/home", async (req, res) => {
-    if (req.isAuthenticated()) {
-        try {
-            const result = await db.query('SELECT post_title, post_content FROM userposts');
-            res.status(200).json(result.rows);
-        } catch (error) {
-            console.error('Error fetching tasks:', error);
-            res.status(500).json({ error: 'Internal Server Error' });
-        }
-    } else {
-        res.status(401).json({ error: 'Unauthorized' });
+// Middleware to authenticate if user is logged in
+const isAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+};
+
+// Example route to fetch user posts if authenticated
+app.get("/home", isAuthenticated, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT post_title, post_content FROM userposts');
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Error fetching posts:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 
+// Route to register a new user
 app.post("/register", async (req, res) => {
     const { username, userpassword } = req.body;
     try {
-        const userCheckResult = await db.query('SELECT * FROM blog WHERE username = $1', [username]);
+        const userCheckResult = await pool.query('SELECT * FROM blog WHERE username = $1', [username]);
         if (userCheckResult.rows.length > 0) {
             return res.status(400).send({ error: "Username already taken" });
         }
 
         const hashedPassword = await bcrypt.hash(userpassword, saltRounds);
-        const result = await db.query('INSERT INTO blog (username, userpassword) VALUES ($1, $2) RETURNING *', [username, hashedPassword]);
+        const result = await pool.query('INSERT INTO blog (username, userpassword) VALUES ($1, $2) RETURNING *', [username, hashedPassword]);
         const user = result.rows[0];
         req.login(user, (err) => {
             if (err) {
@@ -84,8 +99,8 @@ app.post("/register", async (req, res) => {
     }
 });
 
+// Route to handle user login
 app.post("/login", (req, res, next) => {
-    console.log('Received login request with body:', req.body);
     passport.authenticate("local", (err, user, info) => {
         if (err) {
             console.error('Error during authentication:', err);
@@ -105,10 +120,11 @@ app.post("/login", (req, res, next) => {
     })(req, res, next);
 });
 
-app.post("/postblog", async (req, res) => {
+// Route to post a new blog post
+app.post("/postblog", isAuthenticated, async (req, res) => {
     const { postTitle, postContent } = req.body;
     try {
-        await db.query('INSERT INTO userposts (post_title, post_content) VALUES ($1, $2)', [postTitle, postContent]);
+        await pool.query('INSERT INTO userposts (post_title, post_content) VALUES ($1, $2)', [postTitle, postContent]);
         res.status(200).send({ message: "Post inserted successfully" });
     } catch (error) {
         console.error("Error inserting post:", error);
@@ -116,11 +132,12 @@ app.post("/postblog", async (req, res) => {
     }
 });
 
-app.post("/post", async (req, res) => {
+// Route to fetch a specific post by title
+app.post("/post", isAuthenticated, async (req, res) => {
     const { postTitle } = req.body;
     console.log('Received request to fetch post:', postTitle);
     try {
-        const result = await db.query('SELECT * FROM userposts WHERE post_title = $1', [postTitle]);
+        const result = await pool.query('SELECT * FROM userposts WHERE post_title = $1', [postTitle]);
         console.log('Query result:', result.rows);
         if (result.rows.length > 0) {
             const post = result.rows[0];
@@ -134,6 +151,7 @@ app.post("/post", async (req, res) => {
     }
 });
 
+// Passport.js local strategy for authentication
 passport.use(new Strategy(
     {
         usernameField: 'username',
@@ -141,7 +159,7 @@ passport.use(new Strategy(
     },
     async (username, password, cb) => {
         try {
-            const result = await db.query('SELECT * FROM blog WHERE username = $1', [username]);
+            const result = await pool.query('SELECT * FROM blog WHERE username = $1', [username]);
             if (result.rows.length > 0) {
                 const user = result.rows[0];
                 const storedHashedPassword = user.userpassword;
@@ -171,7 +189,7 @@ passport.serializeUser((user, cb) => {
 
 passport.deserializeUser(async (id, cb) => {
     try {
-        const result = await db.query('SELECT * FROM blog WHERE id = $1', [id]);
+        const result = await pool.query('SELECT * FROM blog WHERE id = $1', [id]);
         if (result.rows.length > 0) {
             cb(null, result.rows[0]);
         } else {
@@ -182,6 +200,7 @@ passport.deserializeUser(async (id, cb) => {
     }
 });
 
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
