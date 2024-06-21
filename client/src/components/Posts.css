@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+
+.posts-parent{
+    min-height: 100vh; /* Ensure it covers at least the viewport height */
+    height: auto; /* Allow it to grow as needed */
+    overflow-y: auto;
+    background: #C9CCD3;
+    background-image: linear-gradient(-180deg, rgba(255,255,255,0.50) 0%, rgba(0,0,0,0.50) 100%);
+    background-blend-mode: lighten;
+}
+.posts-container {
+    min-height: 100vh; /* Ensure it covers at least the viewport height */
+    height: auto; /* Allow it to grow as needed */
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    background-color: #f7f7f7; /* Light background color */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+   
+    font-family: 'Merriweather', serif;
+    max-width: 800px; /* Set maximum width */
+    width: 90%; /* Limit width relative to parent container */
+    margin: 0 auto; /* Center horizontally */
+}
+
+.posts-container h1 {
+    font-size: 36px; /* Decreased font size */
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.posts-container p {
+    font-size: 18px; /* Decreased font size */
+    line-height: 1.6;
+    color: #555;
+    max-width: 100%; /* Ensure paragraphs don't exceed container width */
+    overflow-wrap: break-word; /* Allow words to break if necessary */
+}
+
+.posts-container p:first-child {
+    margin-top: 0;
+}

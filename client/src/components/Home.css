@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+
+.home-parent {
+    background: #C9CCD3;
+ background-image: linear-gradient(-180deg, rgba(255,255,255,0.50) 0%, rgba(0,0,0,0.50) 100%);
+ background-blend-mode: lighten;
+    min-height: 100vh; /* Ensure it covers at least the viewport height */
+    height: auto; /* Allow it to grow as needed */
+    overflow-y: auto; /* Add vertical scrollbar if content exceeds viewport height */
+    display: flex; /* Flex container to control children */
+    flex-direction: column; /* Stack children vertically */
+}
+
+
+.blog-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.blog-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%; /* Adjusted width to 80% of the parent container */
+    max-width: 600px; /* Set a maximum width to limit expansion */
+}
+
+.blog-title {
+    width: 100%; /* Take full width of the container */
+    padding: 10px;
+    font-size: 25px;
+    margin-bottom: 10px;
+    height: 50px;
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    /* Light background color to indicate input field */
+    background: #C9CCD3;
+ background-image: linear-gradient(-180deg, rgba(255,255,255,0.50) 0%, rgba(0,0,0,0.50) 100%);
+ background-blend-mode: lighten;
+}
+.blog-content{
+    width: 100%; /* Take full width of the container */
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    height: 50px;
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    /* Light background color to indicate input field */
+    background: #C9CCD3;
+    background-image: linear-gradient(-180deg, rgba(255,255,255,0.50) 0%, rgba(0,0,0,0.50) 100%);
+    background-blend-mode: lighten;
+
+}
+
+.blog-content {
+    height: 500px; /* Specific height for content area */
+    resize: vertical; /* Allow vertical resizing */
+}
+
+button {
+    padding: 10px 20px;
+    background-image: linear-gradient(to right, #606974, #485563, #6496b8, #4e4376);
+    box-shadow: 0 4px 15px 0 rgba(43, 46, 51, 0.75);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376);
+    box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75);
+}
+
+.blog-post-title {
+    width: 100%; /* Full width of the parent container */
+    max-width: 600px; /* Optional max-width */
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    margin-top: 20px;
+    transition: transform 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
+    background: #C9CCD3;
+    background-image: linear-gradient(-180deg, rgba(255,255,255,0.50) 0%, rgba(0,0,0,0.50) 100%);
+    background-blend-mode: lighten;
+}
+
+.blog-post-title:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+.blog-post-title ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+}
+
+.blog-post-title ul li {
+    margin-bottom: 10px; /* Space between titles */
+    font-size: 18px; /* Larger font for titles */
+    cursor: pointer;
+    font-family: 'Merriweather', serif;
+    font-size: 20px; 
+}
+
+.comunity-posts {
+    font-family: 'Merriweather', serif;
+    font-size: 24px; /* Adjust the font size as needed */
+    margin-bottom: 20px; /* Space below the heading */
+    display: flex;
+    justify-content: center;
+}
