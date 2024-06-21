@@ -38,17 +38,22 @@ const PORT = process.env.PORT || 5000;
 const saltRounds = 10;
 
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://blog-t7q7.onrender.com',
     credentials: true
 }));
+
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(session({
     secret: 'TOPSECRETWORD',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: {
+        secure: true, // Set to true in production
+        sameSite: 'none' // Adjust as per your requirements
+    }
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
