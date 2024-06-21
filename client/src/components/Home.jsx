@@ -12,7 +12,7 @@ function Home() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await axios.get('http://localhost:5000/home', {
+                const response = await axios.get('https://blog-backend-khj7.onrender.com/home', {
                     withCredentials: true // Include credentials in the request
                 });
                 const data = Array.isArray(response.data) ? response.data : [];
@@ -36,7 +36,7 @@ function Home() {
     async function postBlog(event) {
         event.preventDefault();
         try {
-            await axios.post('http://localhost:5000/postblog', 
+            await axios.post('https://blog-backend-khj7.onrender.com/postblog', 
             { postTitle: title, postContent: content }, 
             { withCredentials: true }); // Include credentials
             const newBlogPost = { post_title: title, post_content: content };
@@ -50,7 +50,7 @@ function Home() {
     
     async function showPost(postTitle) {
         try {
-            const response = await axios.post('http://localhost:5000/post', 
+            const response = await axios.post('https://blog-backend-khj7.onrender.com/post', 
             { postTitle }, 
             { withCredentials: true }); // Include credentials
             if (response.status === 200) {
