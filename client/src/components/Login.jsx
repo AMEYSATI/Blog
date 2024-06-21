@@ -19,7 +19,7 @@ function Login() {
     async function loginUser(event) {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/login', 
+            const response = await axios.post('https://blog-backend-khj7.onrender.com/login', 
             { username: name, userpassword: password },
             { withCredentials: true }); // Include credentials
             if (response.status === 200) {
