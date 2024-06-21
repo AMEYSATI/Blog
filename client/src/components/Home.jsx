@@ -18,7 +18,9 @@ function Home() {
                 const data = Array.isArray(response.data) ? response.data : [];
                 setSubmittedValues(data);
             } catch (error) {
-                navigate('/login');
+                if (error.response && error.response.status === 401) {
+                    navigate('/login'); // Redirect to login if unauthorized
+                }
                 console.error('Error fetching posts:', error);
             }
         }
