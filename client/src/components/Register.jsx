@@ -19,7 +19,7 @@ function Register() {
     async function registerUser(event) {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/register', 
+            const response = await axios.post('https://blog-backend-khj7.onrender.com/register', 
                 { username: name, userpassword: password },
                 { withCredentials: true } // Ensure cookies are included
             );
