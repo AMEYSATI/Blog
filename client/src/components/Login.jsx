@@ -8,20 +8,21 @@ function Login() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    function handleNameChange(event) {
+    const handleNameChange = (event) => {
         setName(event.target.value);
     }
 
-    function handlePasswordChange(event) {
+    const handlePasswordChange = (event) => {
         setPassword(event.target.value);
     }
 
-    async function loginUser(event) {
+    const loginUser = async (event) => {
         event.preventDefault();
         try {
             const response = await axios.post('https://blog-backend-khj7.onrender.com/login', 
             { username: name, userpassword: password },
             { withCredentials: true }); // Include credentials
+
             if (response.status === 200) {
                 navigate('/home');
             }
@@ -45,8 +46,8 @@ function Login() {
             <div className="login-container">
                 <h1>Login</h1>
                 <form onSubmit={loginUser}>
-                    <input type="text" onChange={handleNameChange} name="username" value={name} placeholder="Username" />
-                    <input type="password" onChange={handlePasswordChange} name="userpassword" value={password} placeholder="Password" />
+                    <input type="text" onChange={handleNameChange} name="username" value={name} placeholder="Username" required />
+                    <input type="password" onChange={handlePasswordChange} name="userpassword" value={password} placeholder="Password" required />
                     <button type="submit">Submit</button>
                 </form>
             </div>
