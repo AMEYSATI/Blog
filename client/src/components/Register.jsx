@@ -21,10 +21,14 @@ function Register() {
         try {
             const response = await axios.post('https://blog-backend-khj7.onrender.com/register', 
                 { username: name, userpassword: password },
-                { withCredentials: true } // Ensure cookies are included
+                { withCredentials: true } 
             );
             if (response.status === 200) {
-                 await axios.get('https://blog-backend-khj7.onrender.com/home', { withCredentials: true });
+                console.log('Registration successful. Logging in...');
+                const homeResponse = await axios.get('https://blog-backend-khj7.onrender.com/home', { withCredentials: true });
+                console.log('Home response:', homeResponse.data);
+                // You may want to navigate to the home page or show a success message
+                navigate('/home');
             }
         } catch (error) {
             if (error.response && error.response.status === 400) {
