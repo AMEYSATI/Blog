@@ -52,6 +52,7 @@ app.use(session({
         secure: true, // Ensure secure cookies in production
         sameSite: 'none', // Adjust as per your requirements
         httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 
     }
 }));
 
