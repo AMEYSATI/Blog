@@ -24,10 +24,6 @@ function Register() {
                 { withCredentials: true } 
             );
             if (response.status === 200) {
-                console.log('Registration successful. Logging in...');
-                const homeResponse = await axios.get('https://blog-backend-khj7.onrender.com/home', { withCredentials: true });
-                console.log('Home response:', homeResponse.data);
-                // You may want to navigate to the home page or show a success message
                 navigate('/home');
             }
         } catch (error) {
