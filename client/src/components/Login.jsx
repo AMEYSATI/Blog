@@ -21,10 +21,10 @@ function Login() {
         try {
             const response = await axios.post('https://blog-backend-khj7.onrender.com/login', 
             { username: name, userpassword: password },
-            { withCredentials: true }); // Include credentials
+            { withCredentials: true }); 
 
             if (response.status === 200) {
-                 await axios.get('https://blog-backend-khj7.onrender.com/home', { withCredentials: true });
+                navigate('/home');
             }
         } catch (error) {
             if (error.response) {
