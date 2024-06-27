@@ -1,58 +1,63 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './Login.css'; // Import the CSS file
+import './Register.css'; // Import the CSS file
 
-function Login() {
+function Register() {
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    const handleNameChange = (event) => {
+    function handleNameChange(event) {
         setName(event.target.value);
     }
 
-    const handlePasswordChange = (event) => {
+    function handlePasswordChange(event) {
         setPassword(event.target.value);
     }
 
-    const loginUser = async (event) => {
+    async function registerUser(event) {
         event.preventDefault();
         try {
-            const response = await axios.post('https://blog-backend-khj7.onrender.com/login', 
-            { username: name, userpassword: password },
-            { withCredentials: true }); 
-
+            const response = await axios.post('https://blog-backend-khj7.onrender.com/register', 
+                { username: name, userpassword: password },
+                { withCredentials: true } 
+            );
             if (response.status === 200) {
-                navigate('/home');
+                // Make a GET request to /home to ensure the session is established
+                const homeResponse = await axios.get('https://blog-backend-khj7.onrender.com/home', { withCredentials: true });
+                if (homeResponse.status === 200) {
+                    navigate('/home');
+                }
             }
         } catch (error) {
-            if (error.response) {
-                if (error.response.status === 400 || error.response.status === 401) {
-                    alert("Invalid username or password");
-                } else {
-                    console.error('Error logging in user:', error);
-                    alert("There was an error logging in the user");
-                }
+            if (error.response && error.response.status === 400) {
+                alert("Username already exists");
             } else {
-                console.error('Error logging in user:', error);
-                alert("There was an error logging in the user");
+                console.error('There was an error registering the user:', error);
             }
         }
     }
-    
+
+    function goToLogin() {
+        navigate('/login');
+    }
+
     return (
-        <div className="login-background">
-            <div className="login-container">
-                <h1>Login</h1>
-                <form onSubmit={loginUser}>
-                    <input type="text" onChange={handleNameChange} name="username" value={name} placeholder="Username" required />
-                    <input type="password" onChange={handlePasswordChange} name="userpassword" value={password} placeholder="Password" required />
+        <div className="register-background">
+            <h1 className="register-header">Welcome to blog</h1>
+            <div className="register-container">
+                <h1>Register</h1>
+                <form onSubmit={registerUser}>
+                    <input type="text" onChange={handleNameChange} value={name} placeholder="Username" />
+                    <input type="password" onChange={handlePasswordChange} value={password} placeholder="Password" />
                     <button type="submit">Submit</button>
                 </form>
             </div>
+            <h3>Already registered?</h3>
+            <h4 onClick={goToLogin} className="blog-go-login">Login</h4>
         </div>
     );
 }
 
-export default Login;
+export default Register;
