@@ -122,10 +122,12 @@ app.post("/login", (req, res, next) => {
                 console.error('Error logging in user:', err);
                 return res.status(500).send({ error: "Internal Server Error" });
             }
+            console.log('Login successful. Session:', req.session);
             return res.status(200).send({ message: "User logged in successfully" });
         });
     })(req, res, next);
 });
+
 
 // Route to post a new blog post
 app.post("/postblog", isAuthenticated, async (req, res) => {
