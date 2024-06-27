@@ -23,8 +23,9 @@ function Login() {
             { username: name, userpassword: password },
             { withCredentials: true }); 
 
-            if (response.status === 200) {
-                    navigate('/home');   
+              if (response.status === 200) {
+                 await axios.get('https://blog-backend-khj7.onrender.com/home', { withCredentials: true });
+                 navigate('/home');
             }
 
         } catch (error) {
