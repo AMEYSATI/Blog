@@ -24,12 +24,16 @@ function Login() {
             { withCredentials: true }); 
 
             if (response.status === 200) {
+                console.log("Login successful. Cookie set:", document.cookie);
                 // Make a GET request to /home to ensure the session is established
                 const homeResponse = await axios.get('https://blog-backend-khj7.onrender.com/home', { withCredentials: true });
                 if (homeResponse.status === 200) {
                     navigate('/home');
+                } else {
+                    console.error('Failed to access /home:', homeResponse.status);
                 }
             }
+
         } catch (error) {
             if (error.response) {
                 if (error.response.status === 400 || error.response.status === 401) {
