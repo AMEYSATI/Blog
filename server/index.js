@@ -49,11 +49,13 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true, 
-        sameSite: 'none', 
+        secure: true,
+        sameSite: 'none',
         httpOnly: true,
+        domain: '.onrender.com' // Set the domain here
     }
 }));
+
 
 
 app.use(passport.initialize());
