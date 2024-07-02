@@ -16,30 +16,32 @@ function Login() {
         setPassword(event.target.value);
     }
 
-    const loginUser = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await axios.post('https://blog-backend-khj7.onrender.com/login', 
-            { username: name, userpassword: password },
-            { withCredentials: true }); 
+const loginUser = async (event) => {
+    event.preventDefault();
+    try {
+        const response = await axios.post('https://blog-backend-khj7.onrender.com/login', 
+        { username: name, userpassword: password },
+        { withCredentials: true });
 
-              if (response.status === 200) {
-                 const anotherresponse = await axios.get('https://blog-backend-khj7.onrender.com/login', { withCredentials: true }); 
-              }
-        } catch (error) {
-            if (error.response) {
-                if (error.response.status === 400 || error.response.status === 401) {
-                    alert("Invalid username or password");
-                } else {
-                    console.error('Error logging in user:', error);
-                    alert("There was an error logging in the user");
-                }
+        if (response.status === 200) {
+            const homeResponse = await axios.get('https://blog-backend-khj7.onrender.com/home', { withCredentials: true });
+            navigate('/home');
+        }
+    } catch (error) {
+        if (error.response) {
+            if (error.response.status === 400 || error.response.status === 401) {
+                alert("Invalid username or password");
             } else {
                 console.error('Error logging in user:', error);
                 alert("There was an error logging in the user");
             }
+        } else {
+            console.error('Error logging in user:', error);
+            alert("There was an error logging in the user");
         }
     }
+}
+
     
     return (
         <div className="login-background">
