@@ -10,15 +10,13 @@ import { Strategy } from 'passport-local';
 import session from 'express-session';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config(); 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configure the PostgreSQL client using environment variables
 let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
 
-// Ensure PGPASSWORD is decoded if it was URL-encoded in .env
 PGPASSWORD = decodeURIComponent(PGPASSWORD);
 
 const pool = new pg.Pool({
@@ -28,16 +26,15 @@ const pool = new pg.Pool({
   password: PGPASSWORD,
   port: 5432,
   ssl: {
-    rejectUnauthorized: false, // Set to true if your Aiven instance requires it
+    rejectUnauthorized: false,
   },
-  connectionTimeoutMillis: 3000, // Adjust as needed
+  connectionTimeoutMillis: 3000, 
 });
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const saltRounds = 10;
 
-app.set('trust proxy', 1); // Trust the first proxy
 app.use(cors({
     origin: 'https://blog-t7q7.onrender.com',
     credentials: true
@@ -50,21 +47,18 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true,
-        sameSite: 'none',
+        secure: true, 
+        sameSite: 'none', 
         httpOnly: true,
-        domain: '.onrender.com' // Set the domain here
     }
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Middleware to authenticate if user is logged in
+
 const isAuthenticated = (req, res, next) => {
-  console.log('Session:', req.session);
-  console.log('User:', req.user);
-  if (req.isAuthenticated()) {
+  if (res.isAuthenticated()) {
     return next();
   } else {
     res.status(401).json({ error: 'Unauthorized' });
@@ -72,7 +66,6 @@ const isAuthenticated = (req, res, next) => {
 };
 
 
-// Example route to fetch user posts if authenticated
 app.get("/home", isAuthenticated, async (req, res) => {
     try {
         const result = await pool.query('SELECT post_title, post_content FROM userposts');
@@ -83,7 +76,7 @@ app.get("/home", isAuthenticated, async (req, res) => {
     }
 });
 
-// Route to register a new user
+
 app.post("/register", async (req, res) => {
     const { username, userpassword } = req.body;
     try {
@@ -110,7 +103,7 @@ app.post("/register", async (req, res) => {
     }
 });
 
-// Route to handle user login
+
 app.post("/login", (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
         if (err) {
@@ -126,13 +119,12 @@ app.post("/login", (req, res, next) => {
                 console.error('Error logging in user:', err);
                 return res.status(500).send({ error: "Internal Server Error" });
             }
-            console.log('Login successful. Session:', req.session);
             return res.status(200).send({ message: "User logged in successfully" });
         });
     })(req, res, next);
 });
 
-// Route to post a new blog post
+
 app.post("/postblog", isAuthenticated, async (req, res) => {
     const { postTitle, postContent } = req.body;
     try {
@@ -144,7 +136,7 @@ app.post("/postblog", isAuthenticated, async (req, res) => {
     }
 });
 
-// Route to fetch a specific post by title
+
 app.post("/post", isAuthenticated, async (req, res) => {
     const { postTitle } = req.body;
     console.log('Received request to fetch post:', postTitle);
@@ -163,7 +155,6 @@ app.post("/post", isAuthenticated, async (req, res) => {
     }
 });
 
-// Passport.js local strategy for authentication
 passport.use(new Strategy(
     {
         usernameField: 'username',
@@ -212,7 +203,6 @@ passport.deserializeUser(async (id, cb) => {
     }
 });
 
-// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
