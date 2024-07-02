@@ -42,6 +42,7 @@ app.use(cors({
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.set('trust proxy', 1);
 app.use(session({
     secret: 'TOPSECRETWORD',
     resave: false,
