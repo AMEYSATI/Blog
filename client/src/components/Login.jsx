@@ -24,7 +24,7 @@ function Login() {
             { withCredentials: true }); 
 
               if (response.status === 200) {
-                 navigate('/home');
+                 const anotherresponse = await axios.get('https://blog-backend-khj7.onrender.com/login', { withCredentials: true }); 
               }
         } catch (error) {
             if (error.response) {
