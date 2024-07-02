@@ -62,12 +62,15 @@ app.use(passport.session());
 
 // Middleware to authenticate if user is logged in
 const isAuthenticated = (req, res, next) => {
+  console.log('Session:', req.session);
+  console.log('User:', req.user);
   if (req.isAuthenticated()) {
     return next();
   } else {
     res.status(401).json({ error: 'Unauthorized' });
   }
 };
+
 
 // Example route to fetch user posts if authenticated
 app.get("/home", isAuthenticated, async (req, res) => {
